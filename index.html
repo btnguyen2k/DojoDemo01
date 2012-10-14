@@ -3,15 +3,105 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Dojo Demo: Contact List</title>
+    
+    <style type="text/css">
+        @import "dojotoolkit-1.8.1/dojo/resources/dojo.css";
+        @import "dojotoolkit-1.8.1/dijit/themes/claro/claro.css";
+        @import "dojotoolkit-1.8.1/dojox/grid/enhanced/resources/claro/EnhancedGrid.css";
+        @import "dojotoolkit-1.8.1/dojox/grid/enhanced/resources/EnhancedGrid_rtl.css";
+
+        /*Grid need a explicit width/height by default*/
+        #grid {
+            width: 800px;
+            height:300px;
+            margin-left: auto; margin-right: auto;
+        }
+        #header {
+            width: 800px;
+            margin-left: auto; margin-right: auto;
+        }
+    </style>.
 </head>
-<body>
-
-    <script type="text/javascript" src="dojo/dojo.js"></script>
+<body class="claro">
+    <script type="text/javascript" src="dojotoolkit-1.8.1/dojo/dojo.js" data-dojo-config="parseOnLoad: true"></script>
     <script type="text/javascript">
+        /* DOJO setup: load dojo components/plugins in the html files to avoid issues with slow network connection */
+        dojo.require("dojox.grid.EnhancedGrid");
+        dojo.require("dojo.data.ItemFileWriteStore");
+        dojo.require("dojox.grid.enhanced.plugins.NestedSorting"); //for column sorting
+        dojo.require("dojox.grid.enhanced.plugins.IndirectSelection"); //for multiple row selections with checkboxes
+        
+        dojo.require('dojo.parser');
+        dojo.require('dijit.Dialog');
+        dojo.require('dijit.form.Button');
+        dojo.require("dijit.form.TextBox");
+        dojo.require("dijit.form.ValidationTextBox");
+        dojo.require("dijit.form.DateTextBox");
     </script>
-    dojo.require("dojox.grid.EnhancedGrid");
-dojo.require("dojo.data.ItemFileWriteStore");
-dojo.require("dojox.grid.enhanced.plugins.NestedSorting");
-
+    <script type="text/javascript" src="js/dataset.js"></script>
+    <script type="text/javascript" src="js/api.js"></script>
+    <script type="text/javascript" src="js/dojostart.js"></script>
+    <script type="text/javascript">
+        dojo.ready(function(){
+            createGrid($STORE, 'gridDiv');
+        });
+    </script>
+    
+    <!-- main layout -->
+    <div id="header">
+        <button dojoType="dijit.form.Button" type="button" onclick="funcRemoveSelected();">Remove Selected</button>
+        <button dojoType="dijit.form.Button" type="button" onclick="funcAddRow();">Add</button>
+    </div>
+    <br />
+    <div id="gridDiv"></div>
+    
+    <!-- the dialog -->
+    <div dojoType="dijit.Dialog" data-dojo-id="DLG_ADD_EDIT" title="Add/Edit Entry">
+        <div class="dijitDialogPaneContentArea">
+            <table>
+            <tr>
+                <td><label for="firstName">First Name: </label></td>
+                <td><input dojoType="dijit.form.ValidationTextBox" type="text" name="firstName" id="firstName" 
+                    promptMessage="Enter first name, must be at least 2 characters"
+                    required="true"
+                    regExp="[A-Za-z]{2,10}"
+                    invalidMessage="First name must be at least 2 characters, and can contain only alphabet characters!"
+                /></td>
+            </tr>
+            <tr>
+                <td><label for="lastName">Last Name: </label></td>
+                <td><input dojoType="dijit.form.ValidationTextBox" type="text" name="lastName" id="lastName" 
+                    promptMessage="Enter last name, must be at least 2 characters"
+                    required="true"
+                    regExp="[A-Za-z]{2,10}"
+                    invalidMessage="Last name must be at least 2 characters, and can contain only alphabet characters!"
+                /></td>
+            </tr>
+            <tr>
+                <td><label for="birthday">Birthday: </label></td>
+                <td><input dojoType="dijit.form.DateTextBox" data-dojo-id="birthday" type="text" name="birthday" id="birthday"
+                    constraints="{datePattern:'yyyy/MM/dd'}"
+                /></td>
+            </tr>
+            <tr>
+                <td><label for="address">Address: </label></td>
+                <td><input dojoType="dijit.form.TextBox" type="text" name="address" id="address" /></td>
+            </tr>
+            <tr>
+                <td><label for="phone">Phone: </label></td>
+                <td><input dojoType="dijit.form.ValidationTextBox" type="text" name="phone" id="phone" 
+                    promptMessage="Enter phone number, must be in format ####.###.###"
+                    required="true"
+                    regExp="^\d\d\d\d\.\d\d\d\.\d\d\d$"
+                    invalidMessage="Phone number must be in format ####.###.###!"
+                /></td>
+            </tr>
+            </table>
+        </div>
+        <div class="dijitDialogPaneActionBar">
+            <button dojoType="dijit.form.Button" type="submit" onClick="return funcDoAddOrEdit();">OK</button>
+            <button dojoType="dijit.form.Button" type="button" onClick="DLG_ADD_EDIT.reset(); DLG_ADD_EDIT.hide();">Cancel</button>
+        </div>
+    </div>
 </body>
 </html>
