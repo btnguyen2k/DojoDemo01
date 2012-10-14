@@ -23,8 +23,16 @@ function createGrid(store, divId) {
         store: store,
         structure: layout,
         rowSelector: '20px',
-        plugins : {nestedSorting: false, indirectSelection: {headerSelector:true, width:"32px", styles:"text-align: center;"}},
-        canSort: function(colIndex, field) {return colIndex != 7;} //do not sort the "Actions" column
+        canSort: function(colIndex, field) {return colIndex != 7;}, //do not sort the "Actions" column
+        plugins : {
+            filter: {
+                // Show the closeFilterbarButton at the filter bar
+                closeFilterbarButton: true,
+                // Set the maximum rule count to 5
+                ruleCount: 5
+            }, 
+            indirectSelection: {headerSelector:true, width:"32px", styles:"text-align: center;"}
+        }
     }, document.createElement('div'));
     
     /* append the new grid to the div */
