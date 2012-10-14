@@ -32,8 +32,6 @@ function createGrid(store, divId) {
         canSort: function(colIndex, field) {return colIndex != 8 && colIndex != 5;}, //do not sort the "Actions" and "Age" columns
         plugins : {
             filter: {
-                // Show the closeFilterbarButton at the filter bar
-                closeFilterbarButton: true,
                 // Set the maximum rule count to 5
                 ruleCount: 5
             }, 
